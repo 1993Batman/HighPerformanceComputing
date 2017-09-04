@@ -11,12 +11,13 @@ float xMove, yMove = 0.0f;
 bool moveUp, moveDown, moveLeft, moveRight, moveDia, drawTri, drawSemCir = false;
 bool drawDots = true;
 int R = 5;
+int i = 0;
 struct points
 {
 	int x;
 	int y;
 }point;
-vector<points> storePoints;
+vector<points> storePoints,semCirPoints;
 
 GLsizei winWidth = 400, winHeight = 300;   // Initial display-window size.
 
@@ -79,22 +80,6 @@ void drawTriangle() {
 	lineDDA(storePoints[1].x, storePoints[0].y, storePoints[0].x, storePoints[0].y);
 }
 
-void mousePtPlot(GLint button, GLint action, GLint xMouse, GLint yMouse)
-{
-	glClear(GL_COLOR_BUFFER_BIT);
-	if (button == GLUT_LEFT_BUTTON && action == GLUT_DOWN) {
-		point.x = xMouse;
-		point.y = winHeight - yMouse;
-		storePoints.insert(storePoints.end(), point);
-	}
-
-	if (storePoints.size() == 4) {
-		storePoints.erase(storePoints.begin());
-		storePoints.erase(storePoints.begin());
-	}
-	glutPostRedisplay();
-	glFlush();
-}
 
 void circleMidpoint(points circCtr, GLint radius)
 {
@@ -143,32 +128,55 @@ void drawCircle(float radius, float x, float y)
 	float vectorY1 = y + radius;
 	float vectorX1 = x;
 	glBegin(GL_POLYGON);
-	if (drawDots) {
-		for (float angle = 0.0f; (angle) <= (2.0f*3.14159); angle += 0.01f)
-		{
-			float vectorX = x + (radius*(float)cos((double)angle));
-			float vectorY = y + (radius*(float)sin((double)angle));
-			glVertex2f(vectorX1, vectorY1);
-			vectorY1 = vectorY;
-			vectorX1 = vectorX;
-		}
-		glEnd();
+	for (float angle = 0.0f; (angle) <= (2.0f*3.14159); angle += 0.01f)
+	{
+		float vectorX = x + (radius*(float)cos((double)angle));
+		float vectorY = y + (radius*(float)sin((double)angle));
+		glVertex2f(vectorX1, vectorY1);
+		vectorY1 = vectorY;
+		vectorX1 = vectorX;
 	}
-	else if (drawSemCir) {
-		glBegin(GL_LINE_LOOP);
-		
-		for (float angle = 0.0f; (angle*2) <= (3.14159); angle += 0.01f)
+	glEnd();
+}
+
+
+
+void storeSemiCircle(points p1, points p2)
+{
+	float x = (p2.x + p1.x) / 2;
+	float y = (p2.y + p1.y) / 2;
+	points center,temp;
+	center.x = x;
+	center.y = y;
+	float radius = (sqrt(pow((p2.x-p1.x),2)+ pow((p2.y - p1.y), 2)))/2;
+	float vectorY1 = y + radius;
+	float vectorX1 = x;
+	float PI = 3.14;
+	if (semCirPoints.size() > 0) {
+		semCirPoints.clear();
+	}
+		float step = 5.0;// How far is the next point i.e it should be small value
+		for (float angle = 0.0f; angle <= 180; angle += step)
 		{
-			float vectorX = x + (radius*(float)cos((double)angle));
-			float vectorY = y + (radius*(float)sin((double)angle));
-			glVertex2f(vectorX1, vectorY1);
-			vectorY1 = vectorY;
-			vectorX1 = vectorX;
+			float rad = PI*angle / 180;
+			x = center.x + radius*cos(rad);
+			y = center.y + radius*sin(rad);
+			temp.x = x;
+			temp.y = y;
+			semCirPoints.insert(semCirPoints.end(), temp);
 		}
 
-		glEnd();
-	}
+}
 
+void drawSemiCircle()
+{
+	
+	glBegin(GL_LINE_LOOP);
+	for (int j = 0; j < semCirPoints.size(); j++)
+	{
+		glVertex2f(semCirPoints[j].x, semCirPoints[j].y);
+	}
+	glEnd();
 
 }
 
@@ -180,9 +188,8 @@ void moveCircle(int dx, int dy)
 	glutPostRedisplay();
 }
 
-void timer_func(int n)     
+void moveTri(int n)     
 {
-	// Update the object positions, etc.
 	int dx = storePoints[1].x - storePoints[0].x;
 	int dy = storePoints[1].y - storePoints[0].y;
 	if (moveDia) {
@@ -218,9 +225,9 @@ void timer_func(int n)
 		if (!(dy > 0)) {
 			dy *= -1;
 		}
-		if (dy - yMove <= dy) {
+		if (yMove >= 0) {
 			moveUp = false;
-			if (dx <= 0) {
+			if (storePoints[1].x - storePoints[0].x >= 0) {
 				moveLeft = true;
 			}
 			else {
@@ -236,29 +243,28 @@ void timer_func(int n)
 		if (!(dy > 0)) {
 			dy *= -1;
 		}
-		if (dy - yMove >= dy) {
+		cout << storePoints[0].y << " : " << (yMove)  << " : "<< storePoints[0].y  - (yMove+ dy)<< endl;
+		if (yMove <= 1) {
 			moveDown = false;
-			if (dy - yMove >= dy) {
-				moveUp = false;
-				if (dx <= 0) {
-					moveLeft = true;
-				}
-				else {
-				moveRight = true;
-				}
+			if (storePoints[1].x - storePoints[0].x >= 0) {
+				moveLeft = true;
+			}
+			else {
+			moveRight = true;
 			}
 		}
+		
 	}
 	else if (moveLeft) {
 		dx = storePoints[0].x - storePoints[1].x;
 		dy = storePoints[1].y - storePoints[1].y;
 		moveCircle(dx, dy);
 		cout << "going left" << endl;
-		cout << storePoints[0].x - (xMove - dx) << endl;
+		cout << xMove - storePoints[0].x  << endl;
 		if (!(dx > 0)) {
 			dx *= -1;
 		}
-		if ((xMove - dx) >= 0) {
+		if (xMove <=1) {
 			moveLeft = false;
 			xMove = 0;
 			yMove = 0;
@@ -274,17 +280,7 @@ void timer_func(int n)
 		if (!(dx > 0)) {
 			dx *= -1;
 		}
-		if (!(xMove > 0)) {
-			int plhlder = xMove * -1;
-			if (dx - plhlder <= 1) {
-				moveLeft = false;
-				xMove = 0;
-				yMove = 0;
-				dx = 0;
-				dy = 0;
-			}
-		}
-		else if (dx - xMove <= 1) {
+		if (xMove >= 1) {
 			moveRight = false;
 			xMove = 0;
 			yMove = 0;
@@ -292,7 +288,68 @@ void timer_func(int n)
 			dy = 0;
 		}
 	}
-	glutTimerFunc(n, timer_func, n); // recursively call timer_func
+	glutTimerFunc(n, moveTri, n); // recursively call moveTri
+}
+void moveSemCir(int n)
+{
+	float dx,dy;
+	points temp;
+	if (moveLeft) {
+		if (i < semCirPoints.size()) {
+			dx = semCirPoints[i + 1].x - semCirPoints[i].x;
+			dy = semCirPoints[i + 1].y - semCirPoints[i].y;
+		}
+		else {
+			dx = semCirPoints[i].x - semCirPoints[0].x;
+			dy = semCirPoints[i].y - semCirPoints[0].y;
+		}
+		moveCircle(dx, dy);
+		temp.x = semCirPoints[i].x + xMove;
+		temp.y = semCirPoints[i].y + yMove;
+		cout << "Next pos :"<< semCirPoints[i].x << " : " << semCirPoints[i].y << endl;
+		cout <<"Current Cir : "<< temp.x << " : " << temp.y << endl;
+		if (i < semCirPoints.size()) {
+			if ((temp.x - semCirPoints[i + 1].x) <= 1   &&  (temp.x -semCirPoints[i + 1].x) >= -1 &&
+				(temp.y - semCirPoints[i + 1].y) <= 1 && (temp.y - semCirPoints[i + 1].y) >= -1) {
+				i++;
+
+			}
+		}
+		else {
+			if ((semCirPoints[i].x + xMove) >= semCirPoints[0].x) {
+				xMove = 0;
+				yMove = 0;
+				moveLeft = false;
+				cout << "opps shouldnt be here" << endl;
+			}
+		}
+	}
+
+	glutTimerFunc(n, moveSemCir, n); // recursively call moveTri
+}
+
+void mousePtPlot(GLint button, GLint action, GLint xMouse, GLint yMouse)
+{
+	glClear(GL_COLOR_BUFFER_BIT);
+	if (button == GLUT_LEFT_BUTTON && action == GLUT_DOWN) {
+		point.x = xMouse;
+		point.y = winHeight - yMouse;
+		storePoints.insert(storePoints.end(), point);
+	}
+
+	if (storePoints.size() == 4) {
+		storePoints.erase(storePoints.begin());
+		storePoints.erase(storePoints.begin());
+	}
+
+	if (storePoints.size() == 2) {
+		cout << "i'm here" << endl;
+		storeSemiCircle(storePoints[0], storePoints[1]);
+		cout << semCirPoints.size() << endl;
+	}
+
+	glutPostRedisplay();
+	glFlush();
 }
 
 void keyboardown(unsigned char key, int x, int y)
@@ -304,7 +361,7 @@ void keyboardown(unsigned char key, int x, int y)
 		drawDots = false;
 		drawSemCir = false;
 		moveDia = true;
-		timer_func(1000);
+		moveTri(500);
 		break;
 	case '+':
 		if (R == 20) {
@@ -339,8 +396,8 @@ void keyboardown(unsigned char key, int x, int y)
 		drawDots = false;
 		drawTri = false;
 		drawSemCir = true;
-		xMove = 0;
-		yMove = 0;
+		moveLeft = true;
+		moveSemCir(10);
 		glClear(GL_COLOR_BUFFER_BIT);
 		
 		break;
@@ -413,15 +470,24 @@ void lineSegment(void)
 		glPopMatrix();
 		
 	}
-	if (storePoints.size() >= 2 && drawSemCir) {
+	if (semCirPoints.size() >= 0 && drawSemCir) {
 
-		points p1;
+		points p1,p2;
 		p1.x = storePoints[0].x;
 		p1.y = storePoints[0].y;
-
+		p2.x = storePoints[1].x;
+		p2.y = storePoints[1].y;
 		glColor3f(0.0, 0.0, 0.0);
-		drawCircle((float)R, p1.x, p1.y);
-		//circleMidpoint(p1, R);
+		drawSemiCircle();
+		float radius = (sqrt(pow((p2.x - p1.x), 2) + pow((p2.y - p1.y), 2))) / 2;
+				
+		glTranslatef(xMove, yMove, 0);
+		circleMidpoint(semCirPoints[0], R);
+		glPopMatrix();
+
+		for (int j = 0; j < semCirPoints.size();j++) {
+			
+		}
 	}
 
 	glFlush();
