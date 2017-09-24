@@ -5,7 +5,8 @@
 
 using namespace std;
 
-inline int roundPoint(const float a) { return int(a + 0.5); }
+inline int roundPoint(const float a) { 
+	return int(a + 0.5); }
 
 struct points
 {
@@ -36,17 +37,29 @@ void lineDDA(int x0, int y0, int xEnd, int yEnd)
 {
 	int dx = xEnd - x0, dy = yEnd - y0, steps, k;
 	float xIncrement, yIncrement, x = x0, y = y0;
-	if (fabs(dx) > fabs(dy))
+	if (fabs(dx) > fabs(dy)) {
 		steps = fabs(dx);
-	else
+		cout << "dx : " << dx << " >> dy: " << dy << " >> steps gotten from dx: " << steps << endl;
+		cout << fabs(dx) << endl;
+	}
+	else {
 		steps = fabs(dy);
+		cout << "dx : " << dx << " >> dy: " << dy << " >> steps gotten from dy: " << steps << endl;
+		cout << fabs(dy) << endl;
+	}
 	xIncrement = float(dx) / float(steps);
 	yIncrement = float(dy) / float(steps);
+	
+	cout << "xInc : " << xIncrement << endl;
+	cout << "yInc : " << yIncrement << endl;
+
 	setPixel(roundPoint(x), roundPoint(y));
 	for (k = 0; k < steps; k++) {
 		x += xIncrement;
 		y += yIncrement;
 		setPixel(roundPoint(x), roundPoint(y));
+		cout << "x : " << x << " round: "<< roundPoint(x) << endl;
+		cout  << "y" << y <<" round: " << roundPoint(y) << endl;
 	}
 }
 void lineBres(int x0, int y0, int xEnd, int yEnd) {
@@ -99,11 +112,10 @@ void lineSegment(void)
 	glClear(GL_COLOR_BUFFER_BIT);  // Clear display window.
 
 	glColor3f(1.0, 0.0, 0.0);      // Set line segment color to red.
-	glBegin(GL_TRIANGLES);
-	glVertex2i(180, 15);       // Specify line-segment geometry.
-	glVertex2i(10, 145);
-	glVertex2i(100, 145);
-	glEnd();
+	lineDDA(10,10,15,13);
+	lineDDA(15,13,10,10);
+	lineDDA(9,3,1,3);
+	lineDDA(10,10,13,15);
 	glFlush();     // Process all OpenGL routines as quickly as possible.
 }
 

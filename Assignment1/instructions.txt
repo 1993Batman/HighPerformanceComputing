@@ -1,0 +1,10 @@
+left mouse click = create a point
+
+move circle around a triangle = a
+move circle around semi circle = z
+
+draw a line of circles = x or click left mouse button twice
+increase circle radius = +
+decrease circle radius = -
+
+exit program = escape

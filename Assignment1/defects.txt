@@ -1,0 +1,2 @@
+Task B
+4) The semi circle isn't drawn the correct place and the animation doesn't work properly
