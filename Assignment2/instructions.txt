@@ -1,0 +1,29 @@
+Common Keys
+-------------
+left arrow: Rotate x value
+right arrow: Rotate x value
+up arrow: Rotate y value
+down arrow: Rotate y value
+q: Rotate z value
+Q: Rotate z value
+w: Move x value
+W: Move x value
+e: Move y value
+E: Move y value
+r: Move z value
+R: Move z value
+c: Change between Basic and Complex Robot
+0: Reset all values
+escape: quit
+--------------
+
+
+
+Basic Robot Commands
+--------------
+a: Rotate neck
+A: Rotate neck
+s: Rotate right shoulder
+S: Rotate right shoulder
+d: Rotate left shoulder
+D: Rotate left shoulder
