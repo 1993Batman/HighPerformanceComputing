@@ -13,7 +13,7 @@ E: Move y value
 r: Move z value
 R: Move z value
 c: Change between Basic and Complex Robot
-0: Reset all values
+0: Reset all non animation values
 escape: quit
 --------------
 
@@ -25,5 +25,18 @@ a: Rotate neck
 A: Rotate neck
 s: Rotate right shoulder
 S: Rotate right shoulder
+d: Rotate left shoulder
+D: Rotate left shoulder
+--------------
+
+
+
+Complex Robot Commands
+--------------
+1: Dance Animation
+2: Kick Animation
+3: Run Animation
+4: Wave Animation
+5: Reset Animation
 d: Rotate left shoulder
 D: Rotate left shoulder

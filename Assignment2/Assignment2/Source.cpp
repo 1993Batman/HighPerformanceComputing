@@ -91,13 +91,12 @@ void resetAnimation()
 }
 
 void selectAnimation() {
+	// Wave animation
 	if (currAnimation == Wave) {
-		//Pick an animation length in frames
 		animationLen = 161;
-		//frames 1 to 10 (total 10)
+		// Move shoulder into position
 		if (animationFrame < 30)
 		{
-			//do animation stuff
 			rShZ -= 3;
 			animationFrame++;
 		}
@@ -106,6 +105,7 @@ void selectAnimation() {
 			rShY += 90;
 			animationFrame++;
 		}
+		//Move elbow and then create a wave like animation
 		else if (animationFrame <= 60)
 		{
 			rElX += 3;
@@ -146,14 +146,12 @@ void selectAnimation() {
 			rShZ += 3;
 			animationFrame++;
 		}
+		//when finsihed it resets the animation to None
 		if (animationFrame > animationLen)
 		{
 			animationFrame = 0;
 			glutPostRedisplay();
-			//reset afterwards
 			resetAnimation();
-			//reset animation to none
-			currAnimation = None;
 		}
 		Sleep(16.6);
 		glutPostRedisplay();
@@ -162,88 +160,216 @@ void selectAnimation() {
 
 	if (currAnimation == Run) {
 		animationLen = 64;
-		//set up Arms
+		//Set up arm movement
 		if (animationFrame <= 9)
 		{
-			//right arm forward 45 & 90 at elbow
+			//Move both arms in a flowing motion using your shoulder and elbows
 			rShX += 5;
 			rElX -= 10;
 			lShX -= 5;
 			lElX -= 10;
 
+			// Extend the left leg in running like motion
 			rHiX -= 5;
 			lHiX += 5;
 			lKnX += 10;
 			animationFrame++;
 		}	else if (animationFrame <= 18){
-			//right leg back to middle
+			//Swing legs back into poistion
 			rHiX += 5;
-			// left leg swing forward
 			lHiX -= 5;
-			animationFrame++;
-			//arms middle
+			
+			//Swing arms back into postion
 			rShX -= 5;
 			lShX += 5;
-			xMove += 0.05;
+			animationFrame++;
 		}	else if (animationFrame <= 27){
-			//right leg straight back
+			//Move right leg forward and bring left leg back
 			rHiX += 5;
-			//left leg straigt forward
 			lHiX -= 5;
 			lKnX -= 10;
-			animationFrame++;
-			//left arm backward right arm forward
+			
+			//Bring left arm backward right arm forward
 			rShX -= 5;
 			lShX += 5;
-			xMove -= 0.05;
+			animationFrame++;
 		}	else if (animationFrame <= 36){
-			//right leg bent in middle
+			//Bend right leg and bring left leg forward
 			rHiX -= 5;
-			//left let straight in middle
 			rKnX += 10;
 			lHiX += 5;
-			//middle arms
+
+			//Swing arms back into postion
 			rShX += 5;
 			lShX -= 5;
 			animationFrame++;
-			xMove += 0.05;
 		}	else if (animationFrame <= 45){
-			//right leg straight forward
+			//Bring right leg forward and left leg back
 			rHiX -= 5;
 			rKnX -= 10;
-			// left leg straight back
 			lHiX += 5;
-			//middle arms
+
+			//Swing arms back into postion
 			rShX += 5;
 			lShX -= 5;
 			animationFrame++;
-			xMove -= 0.05;
 		}	else if (animationFrame <= 54){
-			//left leg bent in middle
+			//Bring right leg back and left leg forward
 			lHiX -= 5;
-			//right let straight in middle
 			lKnX += 10;
 			rHiX += 5;
-			//middle arms
+
+			//Swing arms back into postion
 			rShX -= 5;
 			lShX += 5;
 			animationFrame++;
-			xMove += 0.05;
 		}	else if (animationFrame <= 63){
-			//left leg straight forward
+			//Bring right leg back and left leg forward
 			lHiX -= 5;
 			lKnX -= 10;
-			//right leg straight back
 			rHiX += 5;
-			//middle arms
+
+			//Swing arms back into postion
 			rShX -= 5;
 			lShX += 5;
 			animationFrame++;
-			xMove -= 0.05;
 		}
+		// Reset the frame so we can get a fluid running motion
 		else if (animationFrame == 64)
 		{
 			animationFrame = 28;
+		}
+		Sleep(16.6);
+		glutPostRedisplay();
+	}
+
+	if (currAnimation == Kick) {
+
+		animationLen = 100;
+		if (animationFrame <= 10)
+		{
+			lHiX -= 9;
+			lKnX += 9;
+			animationFrame++;
+		}	else if (animationFrame <= 20)
+		{
+			lKnX -= 9;
+			animationFrame++;
+		}	else if (animationFrame <= 30)
+		{
+			lKnX += 9;
+			animationFrame++;
+		}	else if (animationFrame <= 40)
+		{
+			lHiX += 9;
+			lKnX -= 9;
+			animationFrame++;
+		}
+		//Reset animation
+		if (animationFrame > animationLen)
+		{
+			animationFrame = 0;
+			glutPostRedisplay();
+			resetAnimation();
+		}
+		Sleep(16.6);
+		glutPostRedisplay();
+	}
+
+	if (currAnimation == Dance) {
+		animationLen = 587;
+		if (animationFrame <= 90)
+		{
+			//Bring arms up
+			rShX -= 2.5;
+			rShY += 2;
+			lShX -= 2;
+			lShY += 2;
+			animationFrame++;
+		}	else if (animationFrame <= 120) {
+			//Rotate Shoulder on z axis
+			rShZ -= 3;
+			animationFrame++;
+		}	else if (animationFrame <= 135){
+			//Bend arm slightly
+			rElX -= 5;
+			animationFrame++;
+		}	else if (animationFrame <= 165) {
+			//Bring right leg up
+			rKnX += 3;
+			rHiY -= 3;
+			rHiX -= 3;
+			animationFrame++;
+		}	else if (animationFrame <= 255) {
+			//Spin around
+			xRotate -= 4;
+			animationFrame++;
+		}	else if (animationFrame <= 285) {
+			//Bring right leg down
+			rKnX -= 3;
+			rHiY += 3;
+			rHiX += 3;
+			animationFrame++;
+		}	else if (animationFrame <= 300) {
+			//Bend arm back
+			rElX += 5;
+			animationFrame++;
+		}	else if (animationFrame <= 330) {
+			//Rotate Shoulder on z axis
+			rShZ += 3;
+			animationFrame++;
+		}	else if (animationFrame <= 420) {
+			//Rotate Shoulder on z axis
+			rShX -= 2.5;
+			rShY += 2;
+			lShX -= 2;
+			lShY += 2;
+			animationFrame++;
+		}	else if (animationFrame <= 440) {
+			//Move left leg forward and righ leg back
+			lKnX += 2;
+			lHiX -= 2;
+			rKnX += 2;
+			rHiX += 2;
+			animationFrame++;
+		}	else if (animationFrame <= 470) {
+			//Bring both arms up
+			rShZ -= 3;
+			lShZ += 3;
+			animationFrame++;
+		}	else if (animationFrame <= 500) {
+			//Dab it
+			rShZ -= 3;
+			rShX += 3;
+			rShY -= 4;
+			rElX -= 4;
+			animationFrame++;
+		}	else if (animationFrame <= 530) {
+			//Move left leg forward and righ leg back
+			rShZ += 3;
+			rShX -= 3;
+			rShY += 4;
+			rElX += 4;
+			animationFrame++;
+		}	else if (animationFrame <= 560) {
+			//Bring both arms down
+			rShZ += 3;
+			lShZ -= 3;
+			animationFrame++;
+		}	else if (animationFrame <= 580) {
+			//Move legs back in place
+			lKnX -= 2;
+			lHiX += 2;
+			rKnX -= 2;
+			rHiX -= 2;
+			animationFrame++;
+		}
+		//Reset animation
+		else if (animationFrame > animationLen)
+		{
+			animationFrame = 0;
+			glutPostRedisplay();
+			resetAnimation();
 		}
 		Sleep(16.6);
 		glutPostRedisplay();
@@ -384,7 +510,7 @@ void display(void)
 		glPopMatrix();
 
 		
-		//Draw Left Upper Arm and rotate the shoulder
+		//Draw Left Upper Arm and Rotate the Shoulder
 		glRotatef((GLfloat)lShX, 1.0, 0.0, 0.0);
 		glRotatef((GLfloat)lShZ, 0.0, 0.0, 1.0);
 		glRotatef((GLfloat)lShY, 0.0, 1.0, 0.0); 
@@ -404,9 +530,9 @@ void display(void)
 		glutSolidSphere(1.0, 10, 8);
 		glPopMatrix();
 
-		//Draw Left Lower Arm
-		glRotatef((GLfloat)lElX, 1.0, 0, 0); // Elbow rotation
-		glRotatef((GLfloat)lElY, 0, 1.0, 0); // Elbow rotation
+		//Draw Left Lower Arm and Rotate the Elbow
+		glRotatef((GLfloat)lElX, 1.0, 0, 0); 
+		glRotatef((GLfloat)lElY, 0, 1.0, 0); 
 		glPushMatrix();
 		glTranslatef(0.0, -0.3, 0.0);
 		glPushMatrix();
@@ -425,10 +551,10 @@ void display(void)
 		glutSolidSphere(1.0, 10, 8);
 		glPopMatrix();
 
-		//Draw Right Upper Arm
-		glRotatef((GLfloat)rShX, 1.0, 0.0, 0.0); // shoudler rotation
-		glRotatef((GLfloat)rShZ, 0.0, 0.0, 1.0); // shoulder rotation
-		glRotatef((GLfloat)rShY, 0.0, 1.0, 0.0); // shoulder rotation
+		//Draw Right Upper Arm and Rotate the Shoulder
+		glRotatef((GLfloat)rShX, 1.0, 0.0, 0.0);
+		glRotatef((GLfloat)rShZ, 0.0, 0.0, 1.0); 
+		glRotatef((GLfloat)rShY, 0.0, 1.0, 0.0); 
 		glPushMatrix();
 		glTranslatef(0.0, -0.475, 0.0);
 		glPushMatrix();
@@ -445,9 +571,9 @@ void display(void)
 		glutSolidSphere(1.0, 10, 8);
 		glPopMatrix();
 
-		//Draw Right Lower Arm
-		glRotatef((GLfloat)rElX, 1.0, 0, 0); // Elbow rotation
-		glRotatef((GLfloat)rElY, 0, 1.0, 0); // Elbow rotation
+		//Draw Right Lower Arm and Rotate the Elbow
+		glRotatef((GLfloat)rElX, 1.0, 0, 0); 
+		glRotatef((GLfloat)rElY, 0, 1.0, 0);
 		glPushMatrix();
 		glTranslatef(0.0, -0.3, 0.0);
 		glPushMatrix();
@@ -468,10 +594,10 @@ void display(void)
 		glPopMatrix();
 		
 		
-		//Draw Left Upper Leg
-		glRotatef((GLfloat)lHiX, 1.0, 0, 0); // Hip rotation
-		glRotatef((GLfloat)lHiY, 0, 1.0, 0); // Hip rotation
-		glRotatef((GLfloat)lHiZ, 0, 0, 1.0); // Hip rotation
+		//Draw Left Upper Leg and Rotate the Hip
+		glRotatef((GLfloat)lHiX, 1.0, 0, 0);
+		glRotatef((GLfloat)lHiY, 0, 1.0, 0); 
+		glRotatef((GLfloat)lHiZ, 0, 0, 1.0); 
 		glPushMatrix();
 		glTranslatef(0.0, -0.675, 0.0);
 		glPushMatrix();
@@ -488,9 +614,9 @@ void display(void)
 		glutSolidSphere(1.0, 10, 8);
 		glPopMatrix();
 
-		//Draw Left Lower Leg
-		glRotatef((GLfloat)lKnX, 1.0, 0, 0); // Knee rotation
-		glRotatef((GLfloat)lKnY, 0, 1.0, 0); // Knee rotation
+		//Draw Left Lower Leg and Rotate the Knee
+		glRotatef((GLfloat)lKnX, 1.0, 0, 0); 
+		glRotatef((GLfloat)lKnY, 0, 1.0, 0);
 		glPushMatrix();
 		glTranslatef(0.0, -0.5, 0.0);
 		glPushMatrix();
@@ -518,10 +644,10 @@ void display(void)
 		glutSolidSphere(1.0, 10, 8);
 		glPopMatrix();
 
-		//Draw Right Upper Leg
-		glRotatef((GLfloat)rHiX, 1.0, 0, 0); // Hip rotation
-		glRotatef((GLfloat)rHiY, 0, 1.0, 0); // Hip rotation
-		glRotatef((GLfloat)rHiZ, 0, 0, 1.0); // Hip rotation
+		//Draw Right Upper Leg and Rotate the Hip
+		glRotatef((GLfloat)rHiX, 1.0, 0, 0); 
+		glRotatef((GLfloat)rHiY, 0, 1.0, 0); 
+		glRotatef((GLfloat)rHiZ, 0, 0, 1.0); 
 		glPushMatrix();
 		glTranslatef(0.0, -0.675, 0.0);
 		glPushMatrix();
@@ -538,9 +664,9 @@ void display(void)
 		glutSolidSphere(1.0, 10, 8);
 		glPopMatrix();
 
-		//Draw Right Lower Leg
-		glRotatef((GLfloat)rKnX, 1.0, 0, 0); // Knee rotation
-		glRotatef((GLfloat)rKnY, 0, 1.0, 0); // Knee rotation
+		//Draw Right Lower Leg and Rotate the Knee
+		glRotatef((GLfloat)rKnX, 1.0, 0, 0); 
+		glRotatef((GLfloat)rKnY, 0, 1.0, 0); 
 		glPushMatrix();
 		glTranslatef(0.0, -0.5, 0.0);
 		glPushMatrix();
